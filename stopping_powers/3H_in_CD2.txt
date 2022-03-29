@@ -1,0 +1,65 @@
+ ==================================================================
+              Calculation using SRIM-2006 
+              SRIM version ---> SRIM-2008.04
+              Calc. date   ---> mars 30, 2011 
+ ==================================================================
+
+ Disk File Name = SRIM Outputs\T in CD2
+
+ Ion = Hydrogen [1] , Mass = 3.016 amu
+
+ Target Density =  1.0600E+00 g/cm3 = 1.1940E+23 atoms/cm3
+ ======= Target  Composition ========
+    Atom   Atom   Atomic    Mass     
+    Name   Numb   Percent   Percent  
+    ----   ----   -------   -------  
+      H      1    066.67    014.37   
+      C      6    033.33    085.63   
+ ====================================
+ Bragg Correction = 0.00%
+ Stopping Units =  MeV / (mg/cm2) 
+ See bottom of Table for other Stopping units 
+
+   Ion        dE/dx      dE/dx     Projected  Longitudinal   Lateral
+  Energy      Elec.      Nuclear     Range     Straggling   Straggling
+-----------  ---------- ---------- ----------  ----------  ----------
+   1.00 MeV   5.207E-01  4.641E-04   13.21 um     5083 A      3558 A   
+   1.10 MeV   4.897E-01  4.271E-04   15.07 um     5772 A      3854 A   
+   1.20 MeV   4.629E-01  3.958E-04   17.05 um     6461 A      4170 A   
+   1.30 MeV   4.393E-01  3.690E-04   19.14 um     7153 A      4505 A   
+   1.40 MeV   4.184E-01  3.458E-04   21.34 um     7848 A      4858 A   
+   1.50 MeV   3.998E-01  3.255E-04   23.64 um     8549 A      5229 A   
+   1.60 MeV   3.831E-01  3.075E-04   26.05 um     9256 A      5618 A   
+   1.70 MeV   3.680E-01  2.916E-04   28.56 um     9969 A      6023 A   
+   1.80 MeV   3.543E-01  2.773E-04   31.17 um     1.07 um     6445 A   
+   2.00 MeV   3.302E-01  2.527E-04   36.68 um     1.33 um     7335 A   
+   2.25 MeV   3.053E-01  2.277E-04   44.10 um     1.71 um     8532 A   
+   2.50 MeV   2.846E-01  2.074E-04   52.10 um     2.06 um     9816 A   
+   2.75 MeV   2.671E-01  1.906E-04   60.64 um     2.40 um     1.12 um  
+   3.00 MeV   2.521E-01  1.765E-04   69.73 um     2.74 um     1.26 um  
+   3.25 MeV   2.420E-01  1.644E-04   79.26 um     3.07 um     1.41 um  
+   3.50 MeV   2.323E-01  1.539E-04   89.20 um     3.39 um     1.57 um  
+   3.75 MeV   2.219E-01  1.447E-04   99.58 um     3.71 um     1.73 um  
+   4.00 MeV   2.118E-01  1.366E-04  110.45 um     4.03 um     1.90 um  
+   4.50 MeV   1.944E-01  1.230E-04  133.68 um     5.23 um     2.26 um  
+   5.00 MeV   1.799E-01  1.119E-04  158.88 um     6.36 um     2.64 um  
+   5.50 MeV   1.675E-01  1.028E-04  186.04 um     7.46 um     3.05 um  
+   6.00 MeV   1.567E-01  9.509E-05  215.13 um     8.56 um     3.48 um  
+   6.50 MeV   1.474E-01  8.850E-05  246.14 um     9.65 um     3.94 um  
+   7.00 MeV   1.392E-01  8.281E-05  279.05 um    10.76 um     4.43 um  
+   8.00 MeV   1.255E-01  7.345E-05  350.38 um    14.82 um     5.47 um  
+   9.00 MeV   1.144E-01  6.606E-05  429.06 um    18.61 um     6.62 um  
+  10.00 MeV   1.053E-01  6.008E-05  514.94 um    22.30 um     7.86 um  
+-----------------------------------------------------------
+ Multiply Stopping by        for Stopping Units
+ -------------------        ------------------
+  1.0600E+01                 eV / Angstrom 
+  1.0600E+02                keV / micron   
+  1.0600E+02                MeV / mm       
+  1.0000E+00                keV / (ug/cm2) 
+  1.0000E+00                MeV / (mg/cm2) 
+  1.0000E+03                keV / (mg/cm2) 
+  8.8772E+00                 eV / (1E15 atoms/cm2)
+  1.8649E+00                L.S.S. reduced units
+ ==================================================================
+ (C) 1984,1989,1992,1998,2008 by J.P. Biersack and J.F. Ziegler
