@@ -10,10 +10,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import glob
 
-files = glob.glob('./data/*.txt')   # all .txt files in ./data
+# filenames whose data you wish to plot:
+# find '-E3' for E3, '-E4' for E4, '-th' for theta-corr., or a specific reaction-code
+sort_by = '-th' # '-E3', '-E4'
+
 
 # Reactants to look for & how to display them
-REACTANTS = {'d':'D', 'n':'n', 'p':'p', '12c':r'^{12}C', '13c':r'^{13}C',\
+REACTANTS = {'d':'D', 'n':'n', 'p':'p', 't':'T', '12c':r'^{12}C', '13c':r'^{13}C',\
              '27al':r'^{27}Al', 'h':r'^{3}He', '13n':r'^{13}N'}
 
 # findReactants(encoded string, reactant dictionary):
@@ -33,14 +36,18 @@ def findReactants(s, reac=REACTANTS):
     if s != "": print("WARNING: Unknown reactant/bad format. Incorrect output.")
     return out
 ##############
-
-# filenames whose data you wish to plot:
-# find '-E3' for E3, '-E4' for E4, '-th' for theta-corr.
-filenames = [f for f in files if f.find('-E3') != -1]
+files = glob.glob('./data/*.txt')   # all .txt files in ./data
+filenames = [f for f in files if f.find(sort_by) != -1]
 print("Found:", filenames)
 # what are you plotting?
-xaxis = r"$\theta_3$ [deg]"
-yaxis = r"$E_3$ [MeV]"
+
+xaxes = {'-E3':r"$\theta_3$ [deg]", '-E4':r"$\theta_4$ [deg]", '-th':r"$\theta_3$ [deg]"}
+yaxes = {'-E3':r"$E_3$ [MeV]", '-E4':r"$E_4$ [MeV]", '-th':r"$\theta_4$ [deg]"}
+
+try: xaxis = xaxes[sort_by]
+except: xaxis = "undefined"
+try: yaxis = yaxes[sort_by]
+except: yaxis = "undefined"
 
 
 for filename in filenames:
@@ -62,7 +69,7 @@ for filename in filenames:
     data = [[float(v) for v in point] for point in data]    # str to floats
     data = zip(*data)   # converts [(x,y)_i] to [(x_i), (y_i)]
 
-    plt.plot(*data, marker='|', markevery=5, label=label)
+    plt.plot(*data, marker='|', markevery=10, label=label)
     plt.legend()
 
 plt.title('At $E_k = 2$ MeV. Every 5th point marked. ')
