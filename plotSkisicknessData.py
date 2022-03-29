@@ -16,10 +16,12 @@ files = glob.glob('./data/*.txt')   # all .txt files in ./data
 REACTANTS = {'d':'D', 'n':'n', 'p':'p', '12c':r'^{12}C', '13c':r'^{13}C',\
              '27al':r'^{27}Al', 'h':r'^{3}He', '13n':r'^{13}N'}
 
-# findReactants:
-#   Given a string and a list of possible reactants (as dict),
-#   identifies and returns a list of reactants in order.
-#   PRECONDITION: 2 --> 2 particle reactions only.
+# findReactants(encoded string, reactant dictionary):
+#   Given the skisickness-encoded filename, extracts reactants for label
+#   and returns them in order in display-format (dict value), given a 
+#   dictionary of reactants to look for.
+#   PRECONDITION: 2 --> 2 particle reactions only.'
+#   RETURNS: List of reactants in display-format, in order.
 def findReactants(s, reac=REACTANTS):
     out = []
     for _ in range(4):
@@ -61,10 +63,9 @@ for filename in filenames:
     data = zip(*data)   # converts [(x,y)_i] to [(x_i), (y_i)]
 
     plt.plot(*data, marker='|', markevery=5, label=label)
-    plt.title('At $E_k = 2$ MeV. Every 5th point marked. ')
-    plt.xlabel(xaxis)
-    plt.ylabel(yaxis)
     plt.legend()
 
-
+plt.title('At $E_k = 2$ MeV. Every 5th point marked. ')
+plt.xlabel(xaxis)
+plt.ylabel(yaxis)
 plt.show()
