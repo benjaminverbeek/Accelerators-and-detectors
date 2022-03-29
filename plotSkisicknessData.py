@@ -11,10 +11,13 @@ import matplotlib.pyplot as plt
 import glob
 
 # filenames whose data you wish to plot:
-# find '-E3' for E3, '-E4' for E4, '-th' for theta-corr., or a specific reaction-code
-sort_by = '-th' # '-E3', '-E4'
+# find '-E3' for E3, '-E4' for E4, '-th' for theta-corr., '-nc' for no-charge particles
+# or a specific reaction-code, e.g.: 'dddd' or 'd12cd12c'
+sort_by = '-E3' # '-E3', '-E4'
 
+sort_by2 = '-E4'      # set = sort_by if only one. Set to something else to include other too.
 
+MARK = 10   # ticks every n:th data point
 # Reactants to look for & how to display them
 REACTANTS = {'d':'D', 'n':'n', 'p':'p', 't':'T', '12c':r'^{12}C', '13c':r'^{13}C',\
              '27al':r'^{27}Al', 'h':r'^{3}He', '13n':r'^{13}N'}
@@ -37,29 +40,31 @@ def findReactants(s, reac=REACTANTS):
     return out
 ##############
 files = glob.glob('./data/*.txt')   # all .txt files in ./data
-filenames = [f for f in files if f.find(sort_by) != -1]
+filenames = [f for f in files if (f.find(sort_by) != -1 or f.find(sort_by2) != -1)]
 print("Found:", filenames)
 # what are you plotting?
 
-xaxes = {'-E3':r"$\theta_3$ [deg]", '-E4':r"$\theta_4$ [deg]", '-th':r"$\theta_3$ [deg]"}
-yaxes = {'-E3':r"$E_3$ [MeV]", '-E4':r"$E_4$ [MeV]", '-th':r"$\theta_4$ [deg]"}
+xaxes = {'-E3':r"$\theta_3$ [deg]", '-E4':r"$\theta_4$ [deg]", '-th':r"$\theta_3$ [deg]", '-nc':r"$\theta$ [deg]"}
+yaxes = {'-E3':r"$E_3$ [MeV]", '-E4':r"$E_4$ [MeV]", '-th':r"$\theta_4$ [deg]", '-nc':r"$E$ [MeV]"}
 
 try: xaxis = xaxes[sort_by]
-except: xaxis = "undefined"
+except: xaxis = "undefined" # if not covered in dictionary
 try: yaxis = yaxes[sort_by]
-except: yaxis = "undefined"
+except: yaxis = "undefined" # if not covered in dictionary
 
 
+i = 0
 for filename in filenames:
     #filename = "pdddd2MeV3.txt"
     # construct label:
     start = filename.find('\\p')   # neglect path and leading p
     ending = filename.find("MeV")   # neglect later part
+    flags = filename[ending+3:-4]    # fetches flag(s)
     label = filename[start+2:ending].lower()  # all lowercase
-    print(filename, label)
+    print(filename, label, flags)
     energy = label[-1]  # last number indicates energy in MeV
     r1, r2, r3, r4 = findReactants(label[:-1])
-    label = f"${r1} + {r2} \\rightarrow {r3} + {r4}$"
+    label = f"${r1} + {r2} \\rightarrow {r3} + {r4}$" + f" [{flags}]"
 
     with open(filename) as f:
         lines = f.readlines()
@@ -69,10 +74,13 @@ for filename in filenames:
     data = [[float(v) for v in point] for point in data]    # str to floats
     data = zip(*data)   # converts [(x,y)_i] to [(x_i), (y_i)]
 
-    plt.plot(*data, marker='|', markevery=10, label=label)
+    linestyles = ['-', '-.', '--', ':']
+    plt.plot(*data, marker='|', markevery=MARK, label=label, linestyle=linestyles[i//10])
     plt.legend()
+    
+    i+=1 
 
-plt.title('At $E_k = 2$ MeV. Every 5th point marked. ')
+plt.title(f'At $E_k = 2$ MeV. Every {MARK}th point marked. ')
 plt.xlabel(xaxis)
 plt.ylabel(yaxis)
 plt.show()
