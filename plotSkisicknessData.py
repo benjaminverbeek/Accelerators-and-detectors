@@ -22,7 +22,7 @@ import glob
 # find '-E3' for E3, '-E4' for E4, '-th' for theta-corr., '-nc' for no-charge particles
 # 'combo' for bothe E3 and E4
 # or a specific reaction-code, e.g.: 'dddd' or 'd12cd12c'
-display_data = 'both'
+display_data = '-th'
 MARK = 10   # ticks every n:th data point
 # Reactants to look for & how to display them
 REACTANTS = {'d':'D', 'n':'n', 'p':'p', 't':'T', '12c':r'^{12}C', '13c':r'^{13}C',\
