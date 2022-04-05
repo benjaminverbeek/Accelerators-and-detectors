@@ -12,6 +12,41 @@
 # Benjamin Verbeek
 # 2022-03-29, Uppsala
 
+# saknar D + 13C och D + 12C och D + ... (alla som har V_c under 2 MeV), D + N? (fler bakgrunds-
+# reaktioner). Ligg rent till. Relativ sannolikhet?
+
+# 5 ggr bättre än separationen (5 sigma) (dessutom: VÄLDIGT mkt bakgrund? då kanske 5 sigma för lite... tvärsnitt
+# andrav reaktioner?)
+# sök specifikation på instrumentet (energiupplösning). Laddad & oladdad i olika!
+# neutron mäts på annat sätt...
+
+# skilja på laddningen? Har vi råd? Hur isf, tekniker? 
+# hela laddningen ska stoppas upp!
+# shift nedåt av stopping i target. 
+# instrument ska tåla vakuum.
+# energetiskt ger de andra inget.
+
+# Plocka specifikationer vi önskar, sedan: läs
+
+# läs radiation detection and measurement.
+# spektroskopisk mätning. Läs de delarna! ej geiger. [Kap 5: jonasitationskammare.]
+# testa 3 huvudtekniker. 
+# [Fotomultiplikatior / scintillator (kap 9)] funkar med laddade partiklar också! -- BENJAMIN
+# [Halvledardetektorer (kap 11) + particle identification (PID)]
+
+# PLOT ONLY CHARGED!!
+# Nästa vecka möte: diskutera detta. Bestäm teknik. Sedan: få intro till den tekniken.
+# sedan jobb med SP.
+# sedan: intro, och vi testar utrustningen. Det jobbet presenteras i rapporten som innehåller:
+# - varför tekniken
+# - varför specen
+# - utvärdering av utrustningen 
+# (för både ladd och neutron)
+
+# relativt tvärsnitt ska mätas
+
+# differential cross section: Ungefär samma för de två. 
+# Neutronmätning eller inte? p + n eller He3 + T?
 
 # IMPORTS:
 import numpy as np
@@ -22,11 +57,13 @@ import glob
 # find '-E3' for E3, '-E4' for E4, '-th' for theta-corr., '-nc' for no-charge particles
 # 'combo' for bothe E3 and E4
 # or a specific reaction-code, e.g.: 'dddd' or 'd12cd12c'
-display_data = '-th'
+display_data = '-nc'
+excluded = 'xxx'
+
 MARK = 10   # ticks every n:th data point
 # Reactants to look for & how to display them
 REACTANTS = {'d':'D', 'n':'n', 'p':'p', 't':'T', '12c':r'^{12}C', '13c':r'^{13}C',\
-             '27al':r'^{27}Al', 'h':r'^{3}He', '13n':r'^{13}N'}
+             '27al':r'^{27}Al', 'h':r'^{3}He', '13n':r'^{13}N', '14n':r'^{14}N', '14c':r'^{14}C'}
 
 if display_data == 'both':
     sort_by = '-E3'
@@ -55,7 +92,7 @@ def findReactants(s, reac=REACTANTS):
     return out
 ##############
 files = glob.glob('./data/*.txt')   # all .txt files in ./data
-filenames = [f for f in files if (f.find(sort_by) != -1 or f.find(sort_by2) != -1)]
+filenames = [f for f in files if ((f.find(sort_by) != -1 or f.find(sort_by2) != -1) and f.find(excluded) == -1)]
 print("Found:", filenames)
 # what are you plotting?
 
