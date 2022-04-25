@@ -108,5 +108,5 @@ for filename in files:
     plt.legend()
     # save figure as png:
     plt.savefig(f"{filename[:-4]}.png", dpi=400) # can change dpi later.
-    plt.show()
+    #plt.show()
 
