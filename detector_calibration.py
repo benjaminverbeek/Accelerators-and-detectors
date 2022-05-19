@@ -5,7 +5,6 @@
 #
 # Author: Benjamin Verbeek, Uppsala University, 2022-04-20
 
-from xml.etree.ElementInclude import include
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.optimize import curve_fit
@@ -20,7 +19,7 @@ LOW_COUNT = 0
 HIGH_COUNT = 310
 
 
-files = glob.glob('./calibration-data/*.Spe')   # all .txt files in ./data
+files = glob.glob('./calibration-data/*.Spe')   # all .Spe files in ./calibration-data
 print(files)
 
 #filename = "./calibration-data/cali-05-ipe450-100-23-4118.Spe"

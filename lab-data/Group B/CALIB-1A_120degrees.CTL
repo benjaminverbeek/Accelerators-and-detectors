@@ -1,0 +1,13 @@
+[ADC1]
+caluse=1 
+calch00=1222.00
+calvl00=5155.000000
+calch01=1311.00
+calvl01=5486.000000
+calch02=1390.00
+calvl02=5805.000000
+caloff=426.693000
+calfact=3.865900
+calfact2=0
+calfact3=0
+calunit=keV
