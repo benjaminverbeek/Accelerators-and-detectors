@@ -41,6 +41,7 @@ for MEASUREMENT_SERIES in ["ERROR_ESTIMATION", 1, 2, 3]:
     # Variables
     WIRESCANNER_OFFSET = -3e-2 # NOTE: MIGHT NEED TO CHANGE THIS?
     FIDUCIAL_CALIBRATION = 0.06 # From manual, fiducial calibration [m]
+    voltage = 14000 # The voltage we are analyzing [V]
 
     # Define file names
     if MEASUREMENT_SERIES == 1:
@@ -256,27 +257,21 @@ for MEASUREMENT_SERIES in ["ERROR_ESTIMATION", 1, 2, 3]:
             raise Exception(f"Unsupported axis: {AXIS}")
 
         def k_fcn(U):
-            return np.sqrt(Z*U/(R**2 * phi))
+            return np.sqrt(Z*U/(R**2 * phi) + 0j)
 
         # Drift
         def M_D(l):
             return np.array([[1, l], [0, 1]])
 
         # Quadrupole
-        def M_Q_nonsimple(l, k, is_focus):
-            if is_focus:
-                c = np.cos(k*l)
-                s = np.sin(k*l)
+        def M_Q_nonsimple(l, k):
+            c = np.cos(k*l)
+            s = np.sin(k*l)
 
-                return np.array([[c, 1/k*s], [-k*s, c]])
+            return np.array([[c, 1/k*s], [-k*s, c]])
 
-            else: 
-                c = np.cosh(k*l)
-                s = np.sinh(k*l)
-                return np.array([[c, 1/k*s], [k*s, c]])
-
-        def M_Q(l, k, is_focus):
-            return M_Q_nonsimple(l, k, is_focus)
+        def M_Q(l, k):
+            return M_Q_nonsimple(l, k)
 
         # Calculate system matricies
         def M_system(XVC, YVC):
@@ -297,19 +292,21 @@ for MEASUREMENT_SERIES in ["ERROR_ESTIMATION", 1, 2, 3]:
 
             # Calculate k values with the corrections that were to be taken in consideration
             k1 = k_fcn(0.83*XVC) 
-            k2 = k_fcn(0.84*YVC) 
+            k2 = k_fcn(-0.84*YVC) 
             k3 = k_fcn(0.83*XVC)
 
             if AXIS == "X":
-                MQ1 = M_Q(LQ1, k1, True)
-                MQ2 = M_Q(LQ2, k2, False)
-                MQ3 = M_Q(LQ3, k3, True)
+                pass
             elif AXIS == "Y":
-                MQ1 = M_Q(LQ1, k1, False)
-                MQ2 = M_Q(LQ2, k2, True)
-                MQ3 = M_Q(LQ3, k3, False)
+                k1 = -k1
+                k2 = -k2
+                k3 = -k3
             else:
                 raise Exception(f"Unsupported axis: {AXIS}")
+
+            MQ1 = M_Q(LQ1, k1)
+            MQ2 = M_Q(LQ2, k2)
+            MQ3 = M_Q(LQ3, k3)
 
             MD1 = M_D(LD1)
             MD2 = M_D(LD2)
