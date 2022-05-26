@@ -1,4 +1,20 @@
-# Author: Benjamin Verbeek, Uppsala University, 2022-04-20
+'''
+Program analyzing the data gathered from the tandem D+D fusion
+experiment coundcuted for the course Accelerators and Detectors.
+
+The program reads the data semi-hard coded, and then calibrates
+the CD2 data to the C background measurement. This produces our
+output signal where we identify relevant peaks and extract the
+number of counts in each peak (peak bin indices are hard-coded
+by trial-and-error.)
+
+After this, plots are generated of the raw data (with relevant 
+x- and y-limits) as well as of the analyzed data.
+
+Benjamin Verbeek
+Uppsala University
+2022-04-26
+'''
 
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
@@ -12,9 +28,10 @@ from scipy.optimize import curve_fit
 
 
 ############## LOAD IN DATA ##############
-### FETCH CD2 DATA ###
+## FETCH CD2 DATA
+print('='*15, f' FETCHING DATA ', '='*15)
 files = glob.glob('./lab-data/Group B/*.mpa') # all .mpa files in ./lab-data
-print(files)
+#print(files)
 
 CD2_data = files[1]
 print(CD2_data)
@@ -48,7 +65,7 @@ data_BN_coincidence_CD2 = data[data_indices[3][0]:data_indices[3][0] + data_indi
 data_BN_coincidence_CD2 = [int(d) for d in data_BN_coincidence_CD2] # BN coincidence
 data_BN_coincidence_CD2 = np.array(data_BN_coincidence_CD2).reshape(int(np.sqrt(data_indices[3][1])), int(np.sqrt(data_indices[3][1])))
 
-####### FETCH C DATA #############
+## FETCH C DATA
 C_data = files[2]
 print(C_data)
 with open(C_data) as f:
@@ -72,6 +89,7 @@ data_N_C = np.array([int(d) for d in data_N_C]) # N
 data_BN_coincidence_C = data[data_indices[3][0]:data_indices[3][0] + data_indices[3][1]]
 data_BN_coincidence_C = np.array([int(d) for d in data_BN_coincidence_C]) # BN coincidence, C
 data_BN_coincidence_C = data_BN_coincidence_C.reshape(int(np.sqrt(data_indices[3][1])), int(np.sqrt(data_indices[3][1])))
+print('='*11, f' FINISHED FETCHING DATA ', '='*11, '\n')
 ############### END FETCH DATA ###############
 
 
@@ -79,7 +97,7 @@ data_BN_coincidence_C = data_BN_coincidence_C.reshape(int(np.sqrt(data_indices[3
 
 
 ############### ANALYSIS ###############
-print("RUNNING ANALYSIS:")
+print('='*18, f' ANALYSIS ', '='*18)
 ## COMPENSATIONS
 ## CALIBRATION FOR DETECTOR B USING CARBON PEAK AT 4500 keV
 carbonpeak = (1000, 1090)   # bin numbers for carbon peak in detector B
@@ -119,7 +137,7 @@ data_N_C = data_N_C*calibration_timeCurrent # copy calibration for A
 signal_N = data_N_CD2 - data_N_C
 
 
-#### COUNTING #####
+## COUNTING
 print("\n")
 print("COUNTING:")
 n_tritium = sum(signal_B[tritiumpeak[0]:tritiumpeak[1]])
@@ -147,9 +165,12 @@ neutronEfficiencyFactor = 2
 neutronDistanceFactor = (distA/distN)**2    # area scales with square of dist
 neutronAreaFactor = areaN/areaA
 neutronTotalFactor = 1/neutronEfficiencyFactor * neutronDistanceFactor * neutronAreaFactor
-print("#Calibrated coinc. events (only efficiency factor):", nCoincEvents_BN*neutronEfficiencyFactor)
-print("Neutron factor detector A vs N:",neutronTotalFactor)
-print("Neutrons calibrated to detector A:", nNeutrons_N/neutronTotalFactor)
+nHe3_byCoinc = nCoincEvents_BN*neutronEfficiencyFactor 
+nNeutrons_calibrated = nNeutrons_N/neutronTotalFactor
+print("#Calibrated coinc. events (only efficiency factor):", nHe3_byCoinc)
+print("Neutron factor detector A vs N:", neutronTotalFactor)
+print("Neutrons calibrated to detector A:", nNeutrons_calibrated)
+
 
 # LIST OF CORRECTIONS:
 # 1. Strategy 1: Tritium vs He3 (by coincidence)
@@ -157,14 +178,21 @@ print("Neutrons calibrated to detector A:", nNeutrons_N/neutronTotalFactor)
 #    which is used to find counts in T-peak from detector B. 
 #    Further, for this strategy, we compare the T-peak to the coincidence measure. Since
 #    the He3 from the coincidence is also measured in detector B, and since size-wise it's
-#    the bottleneck, we only calibrate the coincidence by the neutron detector efficiency.
+#    the bottleneck, we only correct the coincidence by the neutron detector efficiency.
 #
 # 2. Strategy 2: We compare neutron counts (from He3) vs proton counts (from Tritium).
 #    The protons are counted from detector A, and the neutrons from detector N. For A we
-#    calibrate by runtime and current, and then take into account the relative area and 
+#    correct for runtime and current, and then take into account the relative area and 
 #    distance of the respective detectors, as well as the efficiency of N.
 
-print("------------------\n")
+# Print results: #protons / #neutrons and #Tritium / #He3
+print("\n")
+print("RESULTS:")
+print(f"#protons (T) / #neutrons (He3): {nTritiumReact_A/nNeutrons_calibrated:.3f}")
+print(f"#Tritium / #He3: {n_tritium/nHe3_byCoinc:.3f}")
+
+
+print('='*14, f' FINISHED ANALYSIS ', '='*14, '\n')
 ############# END ANALYSIS #############
 
 
@@ -172,6 +200,7 @@ print("------------------\n")
 
 
 ########## PLOTS #############
+print('='*15, f' GENERATING PLOTS ', '='*15)
 ## CD2 TARGET PLOTS
 # Plot data_A_CD2 vs index (bin number)
 plt.figure(1)
@@ -267,7 +296,7 @@ print("Coinc energies: ",bin2energyB(100*4), bin2energyB(152*4))
 plt.close()
 
 
-## ANALYSIS PLOTS ##
+## ANALYSIS PLOTS
 # normalisera datan med protontoppen från kol
 #signal_N = 
 # Plot signal_A vs index (bin number)
@@ -319,10 +348,9 @@ plt.title('Detector N: CD2 minus carbon calibrated C (= signal)')
 plt.xlim(570,630)
 plt.ylim(0,3000)
 plt.savefig('./results/signal_N.png', format='png')
-plt.show()
-
+#plt.show()
+plt.close()
 ########## END PLOTS #############
-
 
 
 #################################
@@ -351,7 +379,7 @@ plt.savefig('./results/gauss_fit_sigA.png', format='png')
 fittedTcount = sum(gauss(np.arange(fitLow,fitUp), *popt))
 print("Fitted T count:", fittedTcount)
 
-print(f"TOTAL RESULTS: fitted tritiums = {fittedTcount}, calibrated neutrons = {nCoincEvents_BN*neutronTotalFactor}, ratio = {fittedTcount/(nCoincEvents_BN*neutronTotalFactor)}")
+print(f"Fitted tritiums = {fittedTcount}, calibrated neutrons = {nCoincEvents_BN*neutronTotalFactor}, ratio = {fittedTcount/(nCoincEvents_BN*neutronTotalFactor)}")
 
 #plt.show()
 
