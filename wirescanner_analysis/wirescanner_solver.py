@@ -382,7 +382,7 @@ for MEASUREMENT_SERIES in ["ERROR_ESTIMATION", 1, 2, 3]:
             raise Exception(f"Unsupported axis: {AXIS}")
 
         plt.errorbar(voltage_list, sigma_11_list, err_sigma_11_list, fmt="*", label="data")
-        plt.plot(x_linspace, y_fit, label=fr"fit: $\epsilon_{axis_label}=${epsilon_x:.3f}, $\alpha_{axis_label}=${alpha_x:.3f}, $\beta_{axis_label}=${beta_x:.3f}")
+        plt.plot(x_linspace, y_fit, label=fr"fit: $\epsilon_{axis_label}=${epsilon_x:.3f} mm·rad, $\alpha_{axis_label}=${alpha_x:.3f}, $\beta_{axis_label}=${beta_x:.3f} mm/rad")
         plt.xlabel("U [V]")
         plt.ylabel("$\sigma^2$ [mm]")
         plt.xlim(min(x_linspace), max(x_linspace))
@@ -393,3 +393,15 @@ for MEASUREMENT_SERIES in ["ERROR_ESTIMATION", 1, 2, 3]:
 
         print(f"Results:")
         print(f"\tepsilon_{axis_label} = {epsilon_x:.3f}, alpha_{axis_label} = {alpha_x:.3f}, beta_{axis_label} = {beta_x:.3f}")
+
+
+# Dimensional analysis:
+# We had 
+#   sigma_22(0) = A -> Unit for A is rad^2
+#   sigma_12(0) = B -> Unit for B is mm*rad
+#   sigma_11(0) = C -> Unit for C is mm^2
+
+# epsilon_x = np.sqrt(A*C - B**2) -> Unit for epsilon_x is mm*rad
+# alpha_x = -B/epsilon_x -> Unit for alpha_x is 1
+# beta_x = C/epsilon_x -> Unit for beta_x is mm/rad
+
