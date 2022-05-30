@@ -104,6 +104,7 @@ carbonpeak = (1000, 1090)   # bin numbers for carbon peak in detector B
 tritiumpeak = (715, 801)    # bin numbers for tritium peak in signal B
 tritium_protonpeak = (503, 635) # bin numbers for proton (T)-peak in signal A
 neutronpeak = (574,615)
+he3peak = (520, 720)
 
 n_CD2_carbon = sum(data_B_CD2[carbonpeak[0]:carbonpeak[1]])
 n_C_carbon = sum(data_B_C[carbonpeak[0]:carbonpeak[1]])
@@ -142,6 +143,9 @@ print("\n")
 print("COUNTING:")
 n_tritium = sum(signal_B[tritiumpeak[0]:tritiumpeak[1]])
 print("#Tritium from detector B (T peak):", n_tritium)
+
+nHe3_sigB = sum(signal_B[he3peak[0]:he3peak[1]])
+print("He3 from detector B (bin range from coinc.):", nHe3_sigB)
 
 nTritiumReact_A = sum(signal_A[503:635])
 print("#Tritium from detector A (p peak):", nTritiumReact_A)
@@ -189,7 +193,11 @@ print("Neutrons calibrated to detector A:", nNeutrons_calibrated)
 print("\n")
 print("RESULTS:")
 print(f"#protons (T) / #neutrons (He3): {nTritiumReact_A/nNeutrons_calibrated:.3f}")
-print(f"#Tritium / #He3: {n_tritium/nHe3_byCoinc:.3f}")
+print(f"#Tritium (from B) / #He3 (from coincidence): {n_tritium/nHe3_byCoinc:.3f}")
+print(f"#Tritium (from B)/ #He3 (from B, bins from coincidence): {n_tritium/nHe3_sigB:.3f}")
+finalAnswer = n_tritium / nHe3_sigB
+print(f"*** Final answer: {finalAnswer:.3f} ***")
+print(f"I.e.: {n_tritium/(n_tritium + nHe3_sigB)*100:.1f}% T, {nHe3_sigB/(n_tritium + nHe3_sigB)*100:.1f}% He3")
 
 
 print('='*14, f' FINISHED ANALYSIS ', '='*14, '\n')
@@ -224,6 +232,7 @@ plt.xlim(2000,6000)
 plt.ylim(0,250)
 plt.savefig('./results/B_CD2.png', format='png')
 #plt.yscale('log')
+#plt.show()
 plt.close()
 
 # plot data_N_CD2 vs index (bin number)
@@ -240,12 +249,13 @@ plt.close()
 
 ## COINCIDENCE PLOT
 plt.figure(4)
-sns.heatmap(data_BN_coincidence_CD2, linewidth=0, norm=LogNorm(), yticklabels=5)
+sns.heatmap(data_BN_coincidence_CD2, linewidth=0, norm=LogNorm(), yticklabels=5, xticklabels=3)
 plt.gcf().gca().invert_yaxis()
 plt.ylim(80,200)
 plt.xlim(0,360)
 plt.title('Coincidence between B and N: CD2 data')
 plt.savefig('./results/BN_coincidence_CD2.png', format='png')
+#plt.show()
 plt.close()
 
 ## CARBON TARGET PLOTS
@@ -330,13 +340,20 @@ plt.close()
 
 # Plot signal B
 plt.figure(13)
-plt.plot([bin2energyB(i) for i in range(data_indices[1][1])], signal_B)
-plt.xlabel('Energy (keV)')
+show_energy = False
+if show_energy:
+    plt.plot([bin2energyB(i) for i in range(data_indices[1][1])], signal_B)
+    plt.xlabel('Energy (keV)')
+    plt.xlim(2100,6000)
+else:
+    plt.plot([(i) for i in range(data_indices[1][1])], signal_B)
+    plt.xlabel('Bin number')
+    plt.xlim(2100/4-200,6000/4+200)
 plt.ylabel('Counts')
 plt.title('Detector B: CD2 minus carbon calibrated C (= signal)')
-plt.xlim(2100,6000)
 plt.ylim(-125,250)
 plt.savefig('./results/signal_B.png', format='png')
+#plt.show()
 plt.close()
 
 # plot signal N
