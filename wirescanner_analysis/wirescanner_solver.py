@@ -203,7 +203,7 @@ for MEASUREMENT_SERIES in ["ERROR_ESTIMATION", 1, 2, 3]:
             ax1.legend()
 
             # Calculate peak width (in length)
-            peak_width_in_length = FIDUCIAL_CALIBRATION * peak_width_in_time / time_between_fiducials
+            peak_width_in_length = FIDUCIAL_CALIBRATION * peak_width_in_time / (2*time_between_fiducials) # multiply by 2 to get calibration correct
             peak_widths.append(peak_width_in_length)
 
             plt.tight_layout()
