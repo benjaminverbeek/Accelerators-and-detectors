@@ -384,7 +384,7 @@ for MEASUREMENT_SERIES in ["ERROR_ESTIMATION", 1, 2, 3]:
         plt.errorbar(voltage_list, sigma_11_list, err_sigma_11_list, fmt="*", label="data")
         plt.plot(x_linspace, y_fit, label=fr"fit: $\epsilon_{axis_label}=${epsilon_x:.3f} mm·rad, $\alpha_{axis_label}=${alpha_x:.3f}, $\beta_{axis_label}=${beta_x:.3f} mm/rad")
         plt.xlabel("U [V]")
-        plt.ylabel("$\sigma^2$ [mm]")
+        plt.ylabel("$\sigma^2$ [mm$^2$]")
         plt.xlim(min(x_linspace), max(x_linspace))
         plt.legend()
         plt.title(f"Measurement series {MEASUREMENT_SERIES}, AXIS: {AXIS}")
